@@ -169,7 +169,7 @@ def extract_5p(lm):
 def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
     """
     Return:
-        transparams        --numpy.array  (raw_W, raw_H, scale, tx, ty)
+        trans_params        --numpy.array  (raw_W, raw_H, scale, tx, ty)
         img_new            --PIL.Image  (target_size, target_size, 3)
         lm_new             --numpy.array  (68, 2), y direction is opposite to v direction
         mask_new           --PIL.Image  (target_size, target_size)
@@ -180,7 +180,6 @@ def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
         lm3D               --numpy.array  (5, 3)
         mask               --PIL.Image  (raw_H, raw_W, 3)
     """
-
     w0, h0 = img.size
     if lm.shape[0] != 5:
         lm5p = extract_5p(lm)
@@ -189,13 +188,24 @@ def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
 
     # calculate translation and scale factors using 5 facial landmarks and standard landmarks of a 3D face
     t, s = POS(lm5p.transpose(), lm3D.transpose())
-    s = rescale_factor/s
+    s = rescale_factor / s
 
     # processing the image
     img_new, lm_new, mask_new = resize_n_crop_img(img, lm, t, s, target_size=target_size, mask=mask)
-    trans_params = np.array([w0, h0, s, t[0], t[1]])
+
+    # Convert t to numpy array
+    t = np.array(t)
+
+    # Convert w0, h0, and s to scalar values
+    w0_scalar = np.array(w0)
+    h0_scalar = np.array(h0)
+    s_scalar = np.array(s)
+
+    # Construct trans_params
+    trans_params = np.array([w0_scalar, h0_scalar, s_scalar, t[0], t[1]])
 
     return trans_params, img_new, lm_new, mask_new
+
 
 # utils for face recognition model
 def estimate_norm(lm_68p, H):
