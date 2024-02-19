@@ -35,7 +35,7 @@ def POS(xp, x):
     sTx = k[3]
     sTy = k[7]
     s = (np.linalg.norm(R1) + np.linalg.norm(R2))/2
-    t = np.stack([sTx, sTy], axis=0)
+    t = np.array([sTx, sTy])  # Convert tuple to NumPy array
 
     return t, s
 
