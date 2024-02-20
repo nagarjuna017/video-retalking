@@ -169,16 +169,16 @@ def extract_5p(lm):
 def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
     """
     Return:
-        trans_params        --numpy.array  (raw_W, raw_H, scale, tx, ty)
-        img_new            --PIL.Image  (target_size, target_size, 3)
-        lm_new             --numpy.array  (68, 2), y direction is opposite to v direction
-        mask_new           --PIL.Image  (target_size, target_size)
+        trans_params        --numpy.array  (5,)
+        img_new             --PIL.Image  (target_size, target_size, 3)
+        lm_new              --numpy.array  (68, 2), y direction is opposite to v direction
+        mask_new            --PIL.Image  (target_size, target_size)
     
     Parameters:
-        img                --PIL.Image  (raw_H, raw_W, 3)
-        lm                 --numpy.array  (68, 2), y direction is opposite to v direction
-        lm3D               --numpy.array  (5, 3)
-        mask               --PIL.Image  (raw_H, raw_W, 3)
+        img                 --PIL.Image  (raw_H, raw_W, 3)
+        lm                  --numpy.array  (68, 2), y direction is opposite to v direction
+        lm3D                --numpy.array  (5, 3)
+        mask                --PIL.Image  (raw_H, raw_W, 3)
     """
     w0, h0 = img.size
     if lm.shape[0] != 5:
@@ -200,6 +200,7 @@ def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
         trans_params = np.array([w0, h0, s, t[0], t[1]])
 
     return trans_params, img_new, lm_new, mask_new
+
 
 
 
